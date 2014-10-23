@@ -1,8 +1,29 @@
-
-//          Copyright Vitali Baumtrok 2014.
-// Distributed under the Boost Software License, Version 1.0.
-//    (See accompanying file LICENSE_1_0.txt or copy at
-//          http://www.boost.org/LICENSE_1_0.txt)
+/*
+ * This is free and unencumbered software released into the public domain.
+ * 
+ * Anyone is free to copy, modify, publish, use, compile, sell, or
+ * distribute this software, either in source code form or as a compiled
+ * binary, for any purpose, commercial or non-commercial, and by any
+ * means.
+ * 
+ * In jurisdictions that recognize copyright laws, the author or authors
+ * of this software dedicate any and all copyright interest in the
+ * software to the public domain. We make this dedication for the benefit
+ * of the public at large and to the detriment of our heirs and
+ * successors. We intend this dedication to be an overt act of
+ * relinquishment in perpetuity of all present and future rights to this
+ * software under copyright law.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ * 
+ * For more information, please refer to <http://unlicense.org>
+ */
 
 
 package freeglut
@@ -17,6 +38,31 @@ import (
 	"os"
 )
 
+
+// display modes for InitDisplayMode
+const (
+	RGB = C.GLUT_RGB
+	RGBA = C.GLUT_RGBA
+	INDEX = C.GLUT_INDEX
+	SINGLE = C.GLUT_SINGLE
+	DOUBLE = C.GLUT_DOUBLE
+	ACCUM = C.GLUT_ACCUM
+	ALPHA = C.GLUT_ALPHA
+	DEPTH = C.GLUT_DEPTH
+	STENCIL = C.GLUT_STENCIL
+	MULTISAMPLE = C.GLUT_MULTISAMPLE
+	STEREO = C.GLUT_STEREO
+	LUMINANCE = C.GLUT_LUMINANCE
+)
+
+// mouse states
+const (
+	LEFT_BUTTON = C.GLUT_LEFT_BUTTON
+	MIDDLE_BUTTON = C.GLUT_MIDDLE_BUTTON
+	RIGHT_BUTTON = C.GLUT_RIGHT_BUTTON
+	DOWN = C.GLUT_DOWN
+	UP = C.GLUT_UP
+)
 
 // special key codes
 const (
@@ -43,38 +89,10 @@ const (
 	KEY_INSERT = C.GLUT_KEY_INSERT
 )
 
-// mouse states
+// entry/exit callback state
 const (
-	LEFT_BUTTON = C.GLUT_LEFT_BUTTON
-	MIDDLE_BUTTON = C.GLUT_MIDDLE_BUTTON
-	RIGHT_BUTTON = C.GLUT_RIGHT_BUTTON
-	DOWN = C.GLUT_DOWN
-	UP = C.GLUT_UP
-	// left as in leave
 	LEFT = C.GLUT_LEFT
 	ENTERED = C.GLUT_ENTERED
-)
-
-// display modes for InitDisplayMode
-const (
-	RGB = C.GLUT_RGB
-	RGBA = C.GLUT_RGBA
-	INDEX = C.GLUT_INDEX
-	SINGLE = C.GLUT_SINGLE
-	DOUBLE = C.GLUT_DOUBLE
-	ACCUM = C.GLUT_ACCUM
-	ALPHA = C.GLUT_ALPHA
-	DEPTH = C.GLUT_DEPTH
-	STENCIL = C.GLUT_STENCIL
-	MULTISAMPLE = C.GLUT_MULTISAMPLE
-	STEREO = C.GLUT_STEREO
-	LUMINANCE = C.GLUT_LUMINANCE
-)
-
-// the UseLayer parameters
-const (
-	NORMAL = C.GLUT_NORMAL
-	OVERLAY = C.GLUT_OVERLAY
 )
 
 // window and menu status
@@ -87,6 +105,19 @@ const (
 	FULLY_RETAINED = C.GLUT_FULLY_RETAINED
 	PARTIALLY_RETAINED = C.GLUT_PARTIALLY_RETAINED
 	FULLY_COVERED = C.GLUT_FULLY_COVERED
+)
+
+// RGB color component specification for GetColor
+const (
+	RED = C.GLUT_RED
+	GREEN = C.GLUT_GREEN
+	BLUE = C.GLUT_BLUE
+)
+
+// the UseLayer parameters
+const (
+	NORMAL = C.GLUT_NORMAL
+	OVERLAY = C.GLUT_OVERLAY
 )
 
 // fonts
@@ -139,17 +170,8 @@ const (
 	INIT_WINDOW_HEIGHT = C.GLUT_INIT_WINDOW_HEIGHT
 	INIT_DISPLAY_MODE = C.GLUT_INIT_DISPLAY_MODE
 	ELAPSED_TIME = C.GLUT_ELAPSED_TIME
+	// glut api version >= 4 or xlib implementation >= 13
 	WINDOW_FORMAT_ID = C.GLUT_WINDOW_FORMAT_ID
-)
-
-// the LayerGet parameters
-const (
-	OVERLAY_POSSIBLE = C.GLUT_OVERLAY_POSSIBLE
-	LAYER_IN_USE = C.GLUT_LAYER_IN_USE
-	HAS_OVERLAY = C.GLUT_HAS_OVERLAY
-	TRANSPARENT_INDEX = C.GLUT_TRANSPARENT_INDEX
-	NORMAL_DAMAGED = C.GLUT_NORMAL_DAMAGED
-	OVERLAY_DAMAGED = C.GLUT_OVERLAY_DAMAGED
 )
 
 // the DeviceGet parameters
@@ -164,6 +186,9 @@ const (
 	NUM_BUTTON_BOX_BUTTONS = C.GLUT_NUM_BUTTON_BOX_BUTTONS
 	NUM_DIALS = C.GLUT_NUM_DIALS
 	NUM_TABLET_BUTTONS = C.GLUT_NUM_TABLET_BUTTONS
+
+	// glut api version >= 4 or xlib implementation >= 13
+
 	DEVICE_IGNORE_KEY_REPEAT = C.GLUT_DEVICE_IGNORE_KEY_REPEAT
 	DEVICE_KEY_REPEAT = C.GLUT_DEVICE_KEY_REPEAT
 	HAS_JOYSTICK = C.GLUT_HAS_JOYSTICK
@@ -171,6 +196,31 @@ const (
 	JOYSTICK_BUTTONS = C.GLUT_JOYSTICK_BUTTONS
 	JOYSTICK_AXES = C.GLUT_JOYSTICK_AXES
 	JOYSTICK_POLL_RATE = C.GLUT_JOYSTICK_POLL_RATE
+)
+
+// the LayerGet parameters
+const (
+	OVERLAY_POSSIBLE = C.GLUT_OVERLAY_POSSIBLE
+	LAYER_IN_USE = C.GLUT_LAYER_IN_USE
+	HAS_OVERLAY = C.GLUT_HAS_OVERLAY
+	TRANSPARENT_INDEX = C.GLUT_TRANSPARENT_INDEX
+	NORMAL_DAMAGED = C.GLUT_NORMAL_DAMAGED
+	OVERLAY_DAMAGED = C.GLUT_OVERLAY_DAMAGED
+)
+
+// glutVideoResizeGet parameters
+// glut api version >= 4 or xlib implementation >= 9
+const (
+	VIDEO_RESIZE_POSSIBLE = C.GLUT_VIDEO_RESIZE_POSSIBLE
+	VIDEO_RESIZE_IN_USE = C.GLUT_VIDEO_RESIZE_IN_USE
+	VIDEO_RESIZE_X_DELTA = C.GLUT_VIDEO_RESIZE_X_DELTA
+	VIDEO_RESIZE_Y_DELTA = C.GLUT_VIDEO_RESIZE_Y_DELTA
+	VIDEO_RESIZE_WIDTH_DELTA = C.GLUT_VIDEO_RESIZE_WIDTH_DELTA
+	VIDEO_RESIZE_HEIGHT_DELTA = C.GLUT_VIDEO_RESIZE_HEIGHT_DELTA
+	VIDEO_RESIZE_X = C.GLUT_VIDEO_RESIZE_X
+	VIDEO_RESIZE_Y = C.GLUT_VIDEO_RESIZE_Y
+	VIDEO_RESIZE_WIDTH = C.GLUT_VIDEO_RESIZE_WIDTH
+	VIDEO_RESIZE_HEIGHT = C.GLUT_VIDEO_RESIZE_HEIGHT
 )
 
 // the GetModifiers parameters
@@ -202,19 +252,12 @@ const (
 	CURSOR_TOP_RIGHT_CORNER = C.GLUT_CURSOR_TOP_RIGHT_CORNER
 	CURSOR_BOTTOM_RIGHT_CORNER = C.GLUT_CURSOR_BOTTOM_RIGHT_CORNER
 	CURSOR_BOTTOM_LEFT_CORNER = C.GLUT_CURSOR_BOTTOM_LEFT_CORNER
-	CURSOR_FULL_CROSSHAIR = C.GLUT_CURSOR_FULL_CROSSHAIR
-	CURSOR_NONE = C.GLUT_CURSOR_NONE
 	CURSOR_INHERIT = C.GLUT_CURSOR_INHERIT
+	CURSOR_NONE = C.GLUT_CURSOR_NONE
+	CURSOR_FULL_CROSSHAIR = C.GLUT_CURSOR_FULL_CROSSHAIR
 )
 
-// RGB color component specification for GetColor
-const (
-	RED = C.GLUT_RED
-	GREEN = C.GLUT_GREEN
-	BLUE = C.GLUT_BLUE
-)
-
-// additional keyboard and joystick constants
+// glut api version >= 4 or xlib implementation >= 13
 const (
 	KEY_REPEAT_OFF = C.GLUT_KEY_REPEAT_OFF
 	KEY_REPEAT_ON = C.GLUT_KEY_REPEAT_ON
@@ -225,7 +268,7 @@ const (
 	JOYSTICK_BUTTON_D = C.GLUT_JOYSTICK_BUTTON_D
 )
 
-// game modes
+// glut api version >= 4 or xlib implementation >= 13
 const (
 	GAME_MODE_ACTIVE = C.GLUT_GAME_MODE_ACTIVE
 	GAME_MODE_POSSIBLE = C.GLUT_GAME_MODE_POSSIBLE
@@ -343,6 +386,11 @@ func PostRedisplay() {
 	C.glutPostRedisplay()
 }
 
+// glut api version >= 4 or xlib implementation >= 11
+func PostWindowRedisplay(windowId int) {
+	C.glutPostWindowRedisplay(C.int(windowId))
+}
+
 func SwapBuffers() {
 	C.glutSwapBuffers()
 }
@@ -395,6 +443,11 @@ func SetCursor(cursor int) {
 	C.glutSetCursor(C.int(cursor))
 }
 
+// glut api version >= 4 or xlib implementation >= 11
+func WarpPointer(x, y int) {
+	C.glutWarpPointer(C.int(x), C.int(y))
+}
+
 /*
  * Overlay Management
  */
@@ -416,6 +469,7 @@ func PostOverlayRedisplay() {
 	C.glutPostOverlayRedisplay()
 }
 
+// glut api version >= 4 or xlib implementation >= 11
 func PostWindowOverlayRedisplay(windowId int) {
 	C.glutPostWindowOverlayRedisplay(C.int(windowId))
 }
@@ -705,6 +759,50 @@ func TimerFunc(msecs int, timer func(timerId int), timerId int) {
 	C.register_timer(C.uint(msecs), C.int(timerId))
 }
 
+// glut api version >= 4 or xlib implementation >= 9
+func WindowStatusFunc(windowStatus func(state int)) {
+	windowId := int(C.glutGetWindow())
+	windowCallbacks[windowId].windowStatus = windowStatus
+	if windowStatus != nil {
+		C.register_windowStatus()
+	} else {
+		C.unregister_windowStatus()
+	}
+}
+
+// glut api version >= 4 or xlib implementation >= 13
+func KeyboardUpFunc(keyboardUp func(key uint8, x, y int)) {
+	windowId := int(C.glutGetWindow())
+	windowCallbacks[windowId].keyboardUp = keyboardUp
+	if keyboardUp != nil {
+		C.register_keyboardUp()
+	} else {
+		C.unregister_keyboardUp()
+	}
+}
+
+// glut api version >= 4 or xlib implementation >= 13
+func SpecialUpFunc(specialUp func(key, x, y int)) {
+	windowId := int(C.glutGetWindow())
+	windowCallbacks[windowId].specialUp = specialUp
+	if specialUp != nil {
+		C.register_specialUp()
+	} else {
+		C.unregister_specialUp()
+	}
+}
+
+// glut api version >= 4 or xlib implementation >= 13
+func JoystickFunc(joystick func(buttonMask uint, x, y, z int), pollInterval int) {
+	windowId := int(C.glutGetWindow())
+	windowCallbacks[windowId].joystick = joystick
+	if joystick != nil {
+		C.register_joystick(C.int(pollInterval))
+	} else {
+		C.unregister_joystick(C.int(pollInterval))
+	}
+}
+
 /*
  * Color Index Colormap Management
  */
@@ -729,12 +827,12 @@ func Get(state int) int {
 	return int(C.glutGet(C.GLenum(state)))
 }
 
-func LayerGet(info int) int {
-	return int(C.glutLayerGet(C.GLenum(info)))
+func LayerGet(type_ int) int {
+	return int(C.glutLayerGet(C.GLenum(type_)))
 }
 
-func DeviceGet(info int) int {
-	return int(C.glutDeviceGet(C.GLenum(info)))
+func DeviceGet(type_ int) int {
+	return int(C.glutDeviceGet(C.GLenum(type_)))
 }
 
 func GetModifiers() int {
@@ -781,6 +879,20 @@ func StrokeCharacter(font int, character rune) {
 
 func StrokeWidth(font int, character rune) int {
 	return int(C.glutStrokeWidth(fontPtr(font), C.int(character)))
+}
+
+// glut api version >= 4 or xlib implementation >= 11
+func BitmapLength(font int, s string) int {
+	cs := C.CString(s)
+	defer C.free(unsafe.Pointer(cs))
+	return int(C.glutBitmapLength(fontPtr(font), (*C.uchar)(unsafe.Pointer(cs))))
+}
+
+// glut api version >= 4 or xlib implementation >= 11
+func StrokeLength(font int, s string) int {
+	cs := C.CString(s)
+	defer C.free(unsafe.Pointer(cs))
+	return int(C.glutStrokeLength(fontPtr(font), (*C.uchar)(unsafe.Pointer(cs))))
 }
 
 /*
@@ -842,6 +954,88 @@ func WireTeapot(size float64) {
 	C.glutWireTeapot(C.GLdouble(size))
 }
 
+/*
+ * video resize sub-API
+ */
+
+// glut api version >= 4 or xlib implementation >= 9
+func VideoResizeGet(param int) int {
+	return int(C.glutVideoResizeGet(C.GLenum(param)))
+}
+
+// glut api version >= 4 or xlib implementation >= 9
+func SetupVideoResizing() {
+	C.glutSetupVideoResizing()
+}
+
+// glut api version >= 4 or xlib implementation >= 9
+func StopVideoResizing() {
+	C.glutStopVideoResizing()
+}
+
+// glut api version >= 4 or xlib implementation >= 9
+func VideoResize(x, y, width, height int) {
+	C.glutVideoResize(C.int(x), C.int(y), C.int(width), C.int(height))
+}
+
+// glut api version >= 4 or xlib implementation >= 9
+func VideoPan(x, y, width, height int) {
+	C.glutVideoPan(C.int(x), C.int(y), C.int(width), C.int(height))
+}
+
+/*
+ * debugging sub-API
+ */
+
+// glut api version >= 4 or xlib implementation >= 9
+func ReportErrors() {
+	C.glutReportErrors()
+}
+
+/*
+ * device control sub-API
+ */
+
+// glut api version >= 4 or xlib implementation >= 13
+func IgnoreKeyRepeat(ignore int) {
+	C.glutIgnoreKeyRepeat(C.int(ignore))
+}
+
+// glut api version >= 4 or xlib implementation >= 13
+func SetKeyRepeat(repeatMode int) {
+	C.glutSetKeyRepeat(C.int(repeatMode))
+}
+
+// glut api version >= 4 or xlib implementation >= 13
+func ForceJoystickFunc() {
+	C.glutForceJoystickFunc()
+}
+
+/*
+ * game mode sub-API
+ */
+
+// glut api version >= 4 or xlib implementation >= 13
+func GameModeString(s string) {
+	cs := C.CString(s)
+	defer C.free(unsafe.Pointer(cs))
+	C.glutGameModeString(cs)
+}
+
+// glut api version >= 4 or xlib implementation >= 13
+func EnterGameMode() int {
+	return int(C.glutEnterGameMode())
+}
+
+// glut api version >= 4 or xlib implementation >= 13
+func LeaveGameMode() {
+	C.glutLeaveGameMode()
+}
+
+// glut api version >= 4 or xlib implementation >= 13
+func GameModeGet(mode int) int {
+	return int(C.glutGameModeGet(C.GLenum(mode)))
+}
 
 /*
  * Go Exported Functions
@@ -979,6 +1173,30 @@ func goTimer(timerId C.int) {
 	timer := timers[goTimerId]
 	delete(timers, goTimerId)
 	timer(goTimerId)
+}
+
+//export goWindowStatus
+func goWindowStatus(state C.int) {
+	windowId := int(C.glutGetWindow())
+	windowCallbacks[windowId].windowStatus(int(state))
+}
+
+//export goKeyboardUp
+func goKeyboardUp(key C.uchar, x, y C.int) {
+	windowId := int(C.glutGetWindow())
+	windowCallbacks[windowId].keyboardUp(uint8(key), int(x), int(y))
+}
+
+//export goSpecialUp
+func goSpecialUp(key, x, y C.int) {
+	windowId := int(C.glutGetWindow())
+	windowCallbacks[windowId].specialUp(int(key), int(x), int(y))
+}
+
+//export goJoystick
+func goJoystick(buttonMask C.uint, x, y, z C.int) {
+	windowId := int(C.glutGetWindow())
+	windowCallbacks[windowId].joystick(uint(buttonMask), int(x), int(y), int(z))
 }
 
 

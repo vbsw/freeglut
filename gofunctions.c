@@ -1,8 +1,29 @@
-
-//          Copyright Vitali Baumtrok 2014.
-// Distributed under the Boost Software License, Version 1.0.
-//    (See accompanying file LICENSE_1_0.txt or copy at
-//          http://www.boost.org/LICENSE_1_0.txt)
+/*
+ * This is free and unencumbered software released into the public domain.
+ * 
+ * Anyone is free to copy, modify, publish, use, compile, sell, or
+ * distribute this software, either in source code form or as a compiled
+ * binary, for any purpose, commercial or non-commercial, and by any
+ * means.
+ * 
+ * In jurisdictions that recognize copyright laws, the author or authors
+ * of this software dedicate any and all copyright interest in the
+ * software to the public domain. We make this dedication for the benefit
+ * of the public at large and to the detriment of our heirs and
+ * successors. We intend this dedication to be an overt act of
+ * relinquishment in perpetuity of all present and future rights to this
+ * software under copyright law.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ * 
+ * For more information, please refer to <http://unlicense.org>
+ */
 
 
 #include <stdio.h>
@@ -105,69 +126,93 @@ void register_idle() {
 void register_timer(unsigned int msecs, int timerId) {
 	glutTimerFunc(msecs, &goTimer, timerId);
 }
+void register_windowStatus() {
+	glutWindowStatusFunc(&goWindowStatus);
+}
+void register_keyboardUp() {
+	glutKeyboardUpFunc(&goKeyboardUp);
+}
+void register_specialUp() {
+	glutSpecialUpFunc(&goSpecialUp);
+}
+void register_joystick(int pollInterval) {
+	glutJoystickFunc(&goJoystick, pollInterval);
+}
 
 
 // unregister callbacks
 
 void unregister_display() {
-	glutDisplayFunc(NULL);
+	glutDisplayFunc(0);
 }
 void unregister_overlayDisplay() {
-	glutOverlayDisplayFunc(NULL);
+	glutOverlayDisplayFunc(0);
 }
 void unregister_reshape() {
-	glutReshapeFunc(NULL);
+	glutReshapeFunc(0);
 }
 void unregister_keyboard() {
-	glutKeyboardFunc(NULL);
+	glutKeyboardFunc(0);
 }
 void unregister_mouse() {
-	glutMouseFunc(NULL);
+	glutMouseFunc(0);
 }
 void unregister_motion() {
-	glutMotionFunc(NULL);
+	glutMotionFunc(0);
 }
 void unregister_passiveMotion() {
-	glutPassiveMotionFunc(NULL);
+	glutPassiveMotionFunc(0);
 }
 void unregister_visibility() {
-	glutVisibilityFunc(NULL);
+	glutVisibilityFunc(0);
 }
 void unregister_entry() {
-	glutEntryFunc(NULL);
+	glutEntryFunc(0);
 }
 void unregister_special() {
-	glutSpecialFunc(NULL);
+	glutSpecialFunc(0);
 }
 void unregister_spaceballMotion() {
-	glutSpaceballMotionFunc(NULL);
+	glutSpaceballMotionFunc(0);
 }
 void unregister_spaceballRotate() {
-	glutSpaceballRotateFunc(NULL);
+	glutSpaceballRotateFunc(0);
 }
 void unregister_spaceballButton() {
-	glutSpaceballButtonFunc(NULL);
+	glutSpaceballButtonFunc(0);
 }
 void unregister_buttonBox() {
-	glutButtonBoxFunc(NULL);
+	glutButtonBoxFunc(0);
 }
 void unregister_dials() {
-	glutDialsFunc(NULL);
+	glutDialsFunc(0);
 }
 void unregister_tabletMotion() {
-	glutTabletMotionFunc(NULL);
+	glutTabletMotionFunc(0);
 }
 void unregister_tabletButton() {
-	glutTabletButtonFunc(NULL);
+	glutTabletButtonFunc(0);
 }
 void unregister_menuStatus() {
-	glutMenuStatusFunc(NULL);
+	glutMenuStatusFunc(0);
 }
 void unregister_menuState() {
-	glutMenuStateFunc(NULL);
+	glutMenuStateFunc(0);
 }
 void unregister_idle() {
-	glutIdleFunc(NULL);
+	glutIdleFunc(0);
+}
+void unregister_windowStatus() {
+	glutWindowStatusFunc(0);
+}
+void unregister_keyboardUp() {
+	glutKeyboardUpFunc(0);
+}
+void unregister_specialUp() {
+	glutSpecialUpFunc(0);
+}
+void unregister_joystick(int pollInterval) {
+	glutJoystickFunc(0, pollInterval);
 }
 
 // Fonts

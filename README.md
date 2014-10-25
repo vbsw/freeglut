@@ -38,7 +38,7 @@ otherwise update it with
 
 Cgo needs another compiler to compile c files. On a 64 bit system a 64 bit compiler is needed. I tried it with the gcc. MinGW provides only 32 bit binaries. So go to <http://tdm-gcc.tdragon.net> to download 64 bit gcc binaries. Install it.
 
-Then download freeglut from <http://www.transmissionzero.co.uk/software/freeglut-devel/> and unpack it for example in
+Then download freeglut from <http://www.transmissionzero.co.uk/software/freeglut-devel/> and unpack it for example to
 
 	C:/Users/Alice/Downloads/freeglut
 
@@ -98,7 +98,7 @@ Compile the binding with
 		}
 	}
 
-## Public Domain
+## Licensing Terms
 This is free and unencumbered software released into the public domain.
 
 Anyone is free to copy, modify, publish, use, compile, sell, or

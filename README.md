@@ -1,23 +1,64 @@
 # freeglut
 
 ## Abstract
-This is freeglut binding for the programming language Go. It works on linux.
-
-## Installation
-
-	go get github.com/vitalibaumtrok/freeglut
-	go install github.com/vitalibaumtrok/freeglut
-
-To update the package type
-
-	go get -u github.com/vitalibaumtrok/freeglut
-
-_Note: You need freeglut, the programming language Go and git to run these commands._
+This is freeglut binding for the programming language Go.
 
 ## Development
 Programming language Go is used. The freeglut functions are not binded, yet.
 
 The reference for the freeglut functions is taken from <http://freeglut.sourceforge.net/docs/api.php>.
+
+## Installation
+
+### Linux
+Install the programming language Go as described here <https://golang.org/doc/install>. Install Git and freeglut.
+
+If you don't have this project already get it with
+
+	$ go get github.com/vitalibaumtrok/freeglut
+
+otherwise update it with
+
+	$ go get -u github.com/vitalibaumtrok/freeglut
+
+Compile it with
+
+	$ go install github.com/vitalibaumtrok/freeglut
+
+### Windows
+Install the programming language Go as described here <https://golang.org/doc/install>. Install Git.
+
+If you don't have this project already get it with (run this preferably from the Git Bash)
+
+	$ go get github.com/vitalibaumtrok/freeglut
+
+otherwise update it with
+
+	$ go get -u github.com/vitalibaumtrok/freeglut
+
+Cgo needs another compiler to compile c files. On a 64 bit system a 64 bit compiler is needed. I tried it with the gcc. MinGW provides only 32 bit binaries. So go to <http://tdm-gcc.tdragon.net> to download 64 bit gcc binaries. Install it.
+
+Then download freeglut from <http://www.transmissionzero.co.uk/software/freeglut-devel/> and unpack it for example in
+
+	C:/Users/Alice/Downloads/freeglut
+
+Then open the file github.com/vitalibaumtrok/freeglut/freeglut.go and change the first line in
+
+	// #cgo LDFLAGS: -lGL -lGLU -lglut
+	// #include <stdlib.h>
+	// #include <GL/glut.h>
+	// #include "gofunctions.h"
+
+to
+
+	// #cgo LDFLAGS: -IC:/Users/Alice/Downloads/freeglut/include -LC:/Users/Alice/Downloads/freeglut/bin/x64 -l:freeglut.dll
+	// #include <stdlib.h>
+	// #include <GL/glut.h>
+	// #include "gofunctions.h"
+
+Compile the binding with
+
+	$ go install github.com/vitalibaumtrok/glut
 
 ## Example
 	package main

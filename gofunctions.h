@@ -93,7 +93,45 @@ void *const_GLUT_BITMAP_HELVETICA_10();
 void *const_GLUT_BITMAP_HELVETICA_12();
 void *const_GLUT_BITMAP_HELVETICA_18();
 
+
+
+
+/* *******************************************
+ * freeglut
+ * *******************************************/
+
+void register_mouseWheel();
+void register_close();
+void register_wmClose();
+void register_menuDestroy();
+void register_multiEntry();
+void register_multiButton();
+void register_multiMotion();
+void register_multiPassive();
+void register_error();
+void register_warning();
+
+void unregister_mouseWheel();
+void unregister_close();
+void unregister_wmClose();
+void unregister_menuDestroy();
+void unregister_multiEntry();
+void unregister_multiButton();
+void unregister_multiMotion();
+void unregister_multiPassive();
+void unregister_error();
+void unregister_warning();
+
+/* *******************************************
+ * freeglut END
+ * *******************************************/
+
+
+
 #endif /* GOFUNCTIONS_H */
+
+
+
 
 
 

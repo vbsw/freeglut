@@ -28,15 +28,347 @@
 
 package freeglut
 
-// #cgo LDFLAGS: -lGL -lGLU -lglut
+// #cgo LDFLAGS: -lglut
 // #include <stdlib.h>
-// #include <GL/glut.h>
+// #include <GL/freeglut.h>
 // #include "gofunctions.h"
 import "C"
 import (
 	"unsafe"
 	"os"
 )
+
+
+
+
+/* *******************************************
+ * FreeGLUT
+ * *******************************************/
+
+// window close behaviour; use it in SetOption(int, int) as value
+const (
+	ACTION_EXIT = C.GLUT_ACTION_EXIT
+	ACTION_GLUTMAINLOOP_RETURNS = C.GLUT_ACTION_GLUTMAINLOOP_RETURNS
+	ACTION_CONTINUE_EXECUTION = C.GLUT_ACTION_CONTINUE_EXECUTION
+)
+
+// rendering context creation; use it in SetOption(int, int) as value
+const (
+	CREATE_NEW_CONTEXT = C.GLUT_CREATE_NEW_CONTEXT
+	USE_CURRENT_CONTEXT = C.GLUT_USE_CURRENT_CONTEXT
+)
+
+// direct/indirect rendering context options (for Unix/X11); use it in SetOption(int, int) as value
+const (
+	FORCE_INDIRECT_CONTEXT = C.GLUT_FORCE_INDIRECT_CONTEXT
+	ALLOW_DIRECT_CONTEXT = C.GLUT_ALLOW_DIRECT_CONTEXT
+	TRY_DIRECT_CONTEXT = C.GLUT_TRY_DIRECT_CONTEXT
+	FORCE_DIRECT_CONTEXT = C.GLUT_FORCE_DIRECT_CONTEXT
+)
+
+// use it in InitContextFlags(int)
+const (
+	DEBUG = C.GLUT_DEBUG
+	FORWARD_COMPATIBLE = C.GLUT_FORWARD_COMPATIBLE
+)
+
+// use it in InitContextProfile(int)
+const (
+	CORE_PROFILE = C.GLUT_CORE_PROFILE
+	COMPATIBILITY_PROFILE = C.GLUT_COMPATIBILITY_PROFILE
+)
+
+// multi-touch/multi-pointer definitions
+const (
+	HAS_MULTI = C.GLUT_HAS_MULTI
+)
+
+// the display mode definitions
+const (
+	CAPTIONLESS = C.GLUT_CAPTIONLESS
+	BORDERLESS = C.GLUT_BORDERLESS
+	SRGB = C.GLUT_SRGB
+)
+
+/*
+ * loop functions
+ */
+
+func MainLoopEvent() {
+	C.glutMainLoopEvent()
+}
+
+func LeaveMainLoop() {
+	C.glutLeaveMainLoop()
+}
+
+func Exit() {
+	C.glutExit()
+}
+
+/*
+ * window management functions
+ */
+
+func FullScreenToggle() {
+	C.glutFullScreenToggle()
+}
+
+func LeaveFullScreen() {
+	C.glutLeaveFullScreen()
+}
+
+/*
+ * window-specific callback functions
+ */
+
+func MouseWheelFunc(mouseWheelFunc func(wheel, direction, x, y int)) {
+	windowId := int(C.glutGetWindow())
+	windowCallbacks[windowId].mouseWheelFunc = mouseWheelFunc
+	if mouseWheelFunc != nil {
+		C.register_mouseWheel()
+	} else {
+		C.unregister_mouseWheel()
+	}
+}
+
+func CloseFunc(closeFunc func()) {
+	windowId := int(C.glutGetWindow())
+	windowCallbacks[windowId].closeFunc = closeFunc
+	if closeFunc != nil {
+		C.register_close()
+	} else {
+		C.unregister_close()
+	}
+}
+
+func WMCloseFunc(wmCloseFunc func()) {
+	windowId := int(C.glutGetWindow())
+	windowCallbacks[windowId].wmCloseFunc = wmCloseFunc
+	if wmCloseFunc != nil {
+		C.register_wmClose()
+	} else {
+		C.unregister_wmClose()
+	}
+}
+
+func MenuDestroyFunc(menuDestroyFunc func()) {
+	windowId := int(C.glutGetWindow())
+	windowCallbacks[windowId].menuDestroyFunc = menuDestroyFunc
+	if menuDestroyFunc != nil {
+		C.register_menuDestroy()
+	} else {
+		C.unregister_menuDestroy()
+	}
+}
+
+/*
+ * state setting and retrieval functions
+ */
+
+func SetOption(option_flag, value int) {
+	C.glutSetOption(C.GLenum(option_flag), C.int(value));
+}
+
+func GetModeValues(mode int) []int {
+	var size C.int
+	var cIntSize uintptr = unsafe.Sizeof(C.int(0))
+	valPtr := unsafe.Pointer(C.glutGetModeValues(C.GLenum(mode), &size))
+	defer C.free(valPtr)
+	values := make([]int, int(size))
+
+	for i:=0; i<int(size); i++ {
+		values[i] = int(*((*C.int)(valPtr)))
+		valPtr = unsafe.Pointer(uintptr(valPtr) + cIntSize)
+	}
+	return values
+}
+
+/*
+ * user-data manipulation
+ */
+
+func SetWindowData(data interface{}) {
+	windowId := int(C.glutGetWindow())
+	windowCallbacks[windowId].data = data
+	C.glutSetWindowData(unsafe.Pointer(&windowCallbacks[windowId].data))
+}
+
+func GetWindowData() interface{} {
+	C.glutGetWindowData()
+	windowId := int(C.glutGetWindow())
+	return windowCallbacks[windowId].data
+}
+
+func SetMenuData(menuData interface{}) {
+	windowId := int(C.glutGetWindow())
+	windowCallbacks[windowId].menuData = menuData
+	C.glutSetMenuData(unsafe.Pointer(&windowCallbacks[windowId].menuData))
+}
+
+func GetMenuData() interface{} {
+	C.glutGetMenuData()
+	windowId := int(C.glutGetWindow())
+	return windowCallbacks[windowId].menuData
+}
+
+/*
+ * font functions
+ */
+
+func BitmapHeight(font unsafe.Pointer) int {
+	return int(C.glutBitmapHeight(font))
+}
+
+func StrokeHeight(font unsafe.Pointer) float32 {
+	return float32(C.glutStrokeHeight(font))
+}
+
+func BitmapString(font unsafe.Pointer, str string) {
+	cStrPtr := unsafe.Pointer(C.CString(str))
+	defer C.free(cStrPtr)
+	C.glutBitmapString(font, (*C.uchar)(cStrPtr))
+}
+
+func StrokeString(font unsafe.Pointer, str string) {
+	cStrPtr := unsafe.Pointer(C.CString(str))
+	defer C.free(cStrPtr)
+	C.glutStrokeString(font, (*C.uchar)(cStrPtr))
+}
+
+/*
+ * geometry functions
+ */
+
+func WireRhombicDodecahedron() {
+	C.glutWireRhombicDodecahedron()
+}
+
+func SolidRhombicDodecahedron() {
+	C.glutSolidRhombicDodecahedron()
+}
+
+func WireSierpinskiSponge(num_levels int, offset [3]float64, scale float64) {
+	var cOffset [3]C.GLdouble
+	cOffset[0] = C.GLdouble(offset[0])
+	cOffset[1] = C.GLdouble(offset[1])
+	cOffset[2] = C.GLdouble(offset[2])
+	C.glutWireSierpinskiSponge(C.int(num_levels), &cOffset[0], C.GLdouble(scale))
+}
+
+func SolidSierpinskiSponge(num_levels int, offset [3]float64, scale float64) {
+	var cOffset [3]C.GLdouble
+	cOffset[0] = C.GLdouble(offset[0])
+	cOffset[1] = C.GLdouble(offset[1])
+	cOffset[2] = C.GLdouble(offset[2])
+	C.glutSolidSierpinskiSponge(C.int(num_levels), &cOffset[0], C.GLdouble(scale))
+}
+
+func WireCylinder(radius, height float64, slices, stacks int) {
+	C.glutWireCylinder(C.GLdouble(radius), C.GLdouble(height), C.GLint(slices), C.GLint(stacks))
+}
+
+func SolidCylinder(radius, height float64, slices, stacks int) {
+	C.glutSolidCylinder(C.GLdouble(radius), C.GLdouble(height), C.GLint(slices), C.GLint(stacks))
+}
+
+/*
+ * extension functions
+ */
+
+func GetProcAddress(procName string) unsafe.Pointer {
+	procNameCStr := C.CString(procName)
+	defer C.free(unsafe.Pointer(procNameCStr))
+	return unsafe.Pointer(C.glutGetProcAddress(procNameCStr))
+}
+
+/*
+ * multi-touch/multi-pointer extensions
+ */
+
+func MultiEntryFunc(multiEntry func(id, status int)) {
+	windowId := int(C.glutGetWindow())
+	windowCallbacks[windowId].multiEntry = multiEntry
+	if multiEntry != nil {
+		C.register_multiEntry()
+	} else {
+		C.unregister_multiEntry()
+	}
+}
+
+func MultiButtonFunc(multiButton func(id, x, y, button, status int)) {
+	windowId := int(C.glutGetWindow())
+	windowCallbacks[windowId].multiButton = multiButton
+	if multiButton != nil {
+		C.register_multiButton()
+	} else {
+		C.unregister_multiButton()
+	}
+}
+
+func MultiMotionFunc(multiMotion func(id, x, y int)) {
+	windowId := int(C.glutGetWindow())
+	windowCallbacks[windowId].multiMotion = multiMotion
+	if multiMotion != nil {
+		C.register_multiMotion()
+	} else {
+		C.unregister_multiMotion()
+	}
+}
+
+func MultiPassiveFunc(multiPassive func(id, x, y int)) {
+	windowId := int(C.glutGetWindow())
+	windowCallbacks[windowId].multiPassive = multiPassive
+	if multiPassive != nil {
+		C.register_multiPassive()
+	} else {
+		C.unregister_multiPassive()
+	}
+}
+
+/*
+ * initialization functions
+ */
+
+func InitContextVersion(majorVersion, minorVersion int) {
+	C.glutInitContextVersion(C.int(majorVersion), C.int(minorVersion))
+}
+
+func InitContextFlags(flags int) {
+	C.glutInitContextFlags(C.int(flags))
+}
+
+func InitContextProfile(profile int) {
+	C.glutInitContextProfile(C.int(profile))
+}
+
+/*
+ * error functions
+ */
+
+func InitErrorFunc(errorFunc func(msg string)) {
+	gErrorFunc = errorFunc
+	if errorFunc != nil {
+		C.register_error()
+	} else {
+		C.unregister_error()
+	}
+}
+
+func InitWarningFunc(warningFunc func(msg string)) {
+	gWarningFunc = warningFunc
+	if warningFunc != nil {
+		C.register_warning()
+	} else {
+		C.unregister_warning()
+	}
+}
+
+/* *******************************************
+ * FreeGLUT END
+ * *******************************************/
+
+
 
 
 // display modes for InitDisplayMode
@@ -53,6 +385,21 @@ const (
 	MULTISAMPLE = C.GLUT_MULTISAMPLE
 	STEREO = C.GLUT_STEREO
 	LUMINANCE = C.GLUT_LUMINANCE
+
+
+/* *******************************************
+ * FreeGLUT
+ * *******************************************/
+
+	AUX = C.GLUT_AUX
+	AUX1 = C.GLUT_AUX1
+	AUX2 = C.GLUT_AUX2
+	AUX3 = C.GLUT_AUX3
+	AUX4 = C.GLUT_AUX4
+
+/* *******************************************
+ * FreeGLUT END
+ * *******************************************/
 )
 
 // mouse states
@@ -87,6 +434,25 @@ const (
 	KEY_HOME = C.GLUT_KEY_HOME
 	KEY_END = C.GLUT_KEY_END
 	KEY_INSERT = C.GLUT_KEY_INSERT
+
+
+/* *******************************************
+ * FreeGLUT
+ * *******************************************/
+
+	KEY_NUM_LOCK = C.GLUT_KEY_NUM_LOCK
+	KEY_BEGIN = C.GLUT_KEY_BEGIN
+	KEY_DELETE = C.GLUT_KEY_DELETE
+	KEY_SHIFT_L = C.GLUT_KEY_SHIFT_L
+	KEY_SHIFT_R = C.GLUT_KEY_SHIFT_R
+	KEY_CTRL_L = C.GLUT_KEY_CTRL_L
+	KEY_CTRL_R = C.GLUT_KEY_CTRL_R
+	KEY_ALT_L = C.GLUT_KEY_ALT_L
+	KEY_ALT_R = C.GLUT_KEY_ALT_R
+
+/* *******************************************
+ * FreeGLUT END
+ * *******************************************/
 )
 
 // entry/exit callback state
@@ -172,6 +538,33 @@ const (
 	ELAPSED_TIME = C.GLUT_ELAPSED_TIME
 	// glut api version >= 4 or xlib implementation >= 13
 	WINDOW_FORMAT_ID = C.GLUT_WINDOW_FORMAT_ID
+
+
+/* *******************************************
+ * FreeGLUT
+ * *******************************************/
+
+	INIT_STATE = C.GLUT_INIT_STATE
+	ACTION_ON_WINDOW_CLOSE = C.GLUT_ACTION_ON_WINDOW_CLOSE
+	WINDOW_BORDER_WIDTH = C.GLUT_WINDOW_BORDER_WIDTH
+	WINDOW_BORDER_HEIGHT = C.GLUT_WINDOW_BORDER_HEIGHT
+	WINDOW_HEADER_HEIGHT = C.GLUT_WINDOW_HEADER_HEIGHT
+	VERSION = C.GLUT_VERSION
+	RENDERING_CONTEXT = C.GLUT_RENDERING_CONTEXT
+	DIRECT_RENDERING = C.GLUT_DIRECT_RENDERING
+	FULL_SCREEN = C.GLUT_FULL_SCREEN
+	SKIP_STALE_MOTION_EVENTS = C.GLUT_SKIP_STALE_MOTION_EVENTS
+
+	// context-related flags
+
+	INIT_MAJOR_VERSION = C.GLUT_INIT_MAJOR_VERSION
+	INIT_MINOR_VERSION = C.GLUT_INIT_MINOR_VERSION
+	INIT_FLAGS = C.GLUT_INIT_FLAGS
+	INIT_PROFILE = C.GLUT_INIT_PROFILE
+
+/* *******************************************
+ * FreeGLUT END
+ * *******************************************/
 )
 
 // the DeviceGet parameters
@@ -304,6 +697,36 @@ type tWindowCallbacks struct {
 	specialUp func(key, x, y int)
 	joystick func(buttonMask uint, x, y, z int)
 	idle func()
+
+
+/* *******************************************
+ * FreeGLUT
+ * *******************************************/
+
+/*
+ * window-specific callback functions
+ */
+
+	mouseWheelFunc func(int, int, int, int)
+	closeFunc func()
+	wmCloseFunc func()
+	menuDestroyFunc func()
+
+	data interface{}
+	menuData interface{}
+	
+/*
+ * multi-touch/multi-pointer functions
+ */
+
+	multiEntry func(id, status int)
+	multiButton func(id, x, y, button, status int)
+	multiMotion func(id, x, y int)
+	multiPassive func(id, x, y int)
+
+/* *******************************************
+ * FreeGLUT END
+ * *******************************************/
 }
 
 
@@ -311,6 +734,18 @@ var (
 	windowCallbacks = make(map[int]*tWindowCallbacks)
 	timers = make(map[int]func(timerId int))
 	menus = make(map[int]func(value int))
+
+
+/* *******************************************
+ * FreeGLUT
+ * *******************************************/
+
+	gErrorFunc func(msg string)
+	gWarningFunc func(msg string)
+
+/* *******************************************
+ * FreeGLUT END
+ * *******************************************/
 )
 
 /*
@@ -1198,6 +1633,73 @@ func goJoystick(buttonMask C.uint, x, y, z C.int) {
 	windowId := int(C.glutGetWindow())
 	windowCallbacks[windowId].joystick(uint(buttonMask), int(x), int(y), int(z))
 }
+
+
+/* *******************************************
+ * FreeGLUT
+ * *******************************************/
+
+//export goMouseWheel
+func goMouseWheel(wheel, direction, x, y C.int) {
+	windowId := int(C.glutGetWindow())
+	windowCallbacks[windowId].mouseWheelFunc(int(wheel), int(direction), int(x), int(y))
+}
+
+//export goClose
+func goClose() {
+	windowId := int(C.glutGetWindow())
+	windowCallbacks[windowId].closeFunc()
+}
+
+//export goWMClose
+func goWMClose() {
+	windowId := int(C.glutGetWindow())
+	windowCallbacks[windowId].wmCloseFunc()
+}
+
+//export goMenuDestroy
+func goMenuDestroy() {
+	windowId := int(C.glutGetWindow())
+	windowCallbacks[windowId].menuDestroyFunc()
+}
+
+//export goMultiEntry
+func goMultiEntry(id, status C.int) {
+	windowId := int(C.glutGetWindow())
+	windowCallbacks[windowId].multiEntry(int(id), int(status))
+}
+
+//export goMultiButton
+func goMultiButton(id, x, y, button, status C.int) {
+	windowId := int(C.glutGetWindow())
+	windowCallbacks[windowId].multiButton(int(id), int(x), int(y), int(button), int(status))
+}
+
+//export goMultiMotion
+func goMultiMotion(id, x, y C.int) {
+	windowId := int(C.glutGetWindow())
+	windowCallbacks[windowId].multiMotion(int(id), int(x), int(y))
+}
+
+//export goMultiPassive
+func goMultiPassive(id, x, y C.int) {
+	windowId := int(C.glutGetWindow())
+	windowCallbacks[windowId].multiPassive(int(id), int(x), int(y))
+}
+
+//export goError
+func goError(msg *C.char) {
+	gErrorFunc(C.GoString(msg))
+}
+
+//export goWarning
+func goWarning(msg *C.char) {
+	gWarningFunc(C.GoString(msg))
+}
+
+/* *******************************************
+ * FreeGLUT END
+ * *******************************************/
 
 
 

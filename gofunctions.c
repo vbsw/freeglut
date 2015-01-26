@@ -34,7 +34,7 @@
 // _cgo_export.h is generated automatically by cgo.
 #include "_cgo_export.h"
 
-// Exported functions from Go are:
+// Exported GLUT functions from Go are:
 // goDisplay
 // goOverlayDisplay
 // goReshape
@@ -46,6 +46,18 @@
 // goEntry
 // goTimer
 // goIdle
+
+// Exported FreeGLUT functions from Go are:
+// goMouseWheel
+// goClose
+// goWMClose
+// goMenuDestroy
+// goMultiEntry
+// goMultiButton
+// goMultiMotion
+// goMultiPassive
+// goError
+// goWarning
 
 
 #if defined(__APPLE__)
@@ -244,4 +256,120 @@ void *const_GLUT_BITMAP_HELVETICA_12() {
 void *const_GLUT_BITMAP_HELVETICA_18() {
 	return GLUT_BITMAP_HELVETICA_18;
 }
+
+
+
+
+/* *******************************************
+ * FreeGLUT
+ * *******************************************/
+
+#define BUFFER_SIZE (1048576-8)*sizeof(char)
+
+static void forwardError(const char *fmt, va_list ap) {
+	char *buffer = (char*)malloc(BUFFER_SIZE);
+
+	snprintf(buffer, BUFFER_SIZE, fmt, ap);
+	goError(buffer);
+
+	free((void*)fmt);
+	free((void*)buffer);
+}
+
+static void forwardWarning(const char *fmt, va_list ap) {
+	char *buffer = (char*)malloc(BUFFER_SIZE);
+
+	snprintf(buffer, BUFFER_SIZE, fmt, ap);
+	goWarning(buffer);
+
+	free((void*)fmt);
+	free((void*)buffer);
+}
+
+void register_mouseWheel() {
+	glutMouseWheelFunc(&goMouseWheel);
+}
+
+void register_close() {
+	glutCloseFunc(&goClose);
+}
+
+void register_wmClose() {
+	glutWMCloseFunc(&goWMClose);
+}
+
+void register_menuDestroy() {
+	glutMenuDestroyFunc(&goMenuDestroy);
+}
+
+void register_multiEntry() {
+	glutMultiEntryFunc(&goMultiEntry);
+}
+
+void register_multiButton() {
+	glutMultiButtonFunc(&goMultiButton);
+}
+
+void register_multiMotion() {
+	glutMultiMotionFunc(&goMultiMotion);
+}
+
+void register_multiPassive() {
+	glutMultiPassiveFunc(&goMultiPassive);
+}
+
+void register_error() {
+	glutInitErrorFunc(forwardError);
+}
+
+void register_warning() {
+	glutInitWarningFunc(forwardWarning);
+}
+
+
+// unregister callbacks
+
+void unregister_mouseWheel() {
+	glutMouseWheelFunc(0);
+}
+
+void unregister_close() {
+	glutCloseFunc(0);
+}
+
+void unregister_wmClose() {
+	glutWMCloseFunc(0);
+}
+
+void unregister_menuDestroy() {
+	glutMenuDestroyFunc(0);
+}
+
+void unregister_multiEntry() {
+	glutMultiEntryFunc(0);
+}
+
+void unregister_multiButton() {
+	glutMultiButtonFunc(0);
+}
+
+void unregister_multiMotion() {
+	glutMultiMotionFunc(0);
+}
+
+void unregister_multiPassive() {
+	glutMultiPassiveFunc(0);
+}
+
+void unregister_error() {
+	glutInitErrorFunc(0);
+}
+
+void unregister_warning() {
+	glutInitWarningFunc(0);
+}
+
+/* *******************************************
+ * FreeGLUT END
+ * *******************************************/
 

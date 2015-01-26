@@ -30,9 +30,9 @@ OTHER DEALINGS IN THE SOFTWARE.
 For more information, please refer to <http://unlicense.org>
 
 ## Development
-Programming language Go is used. The freeglut functions are not binded, yet.
+Programming language Go is used. The binding is not tested and doesn't include the depricated joystick functions.
 
-The reference for the freeglut functions is taken from <http://freeglut.sourceforge.net/docs/api.php>.
+The reference for the freeglut functions is taken from <http://freeglut.sourceforge.net/docs/api.php> and <http://sourcecodebrowser.com/freeglut/2.6.0/freeglut__ext_8h.html>.
 
 ## Installation
 
@@ -70,21 +70,21 @@ Then download freeglut from <http://www.transmissionzero.co.uk/software/freeglut
 
 Then open the file github.com/vitalibaumtrok/freeglut/freeglut.go and change the first line in
 
-	// #cgo LDFLAGS: -lGL -lGLU -lglut
+	// #cgo LDFLAGS: -lglut
 	// #include <stdlib.h>
-	// #include <GL/glut.h>
+	// #include <GL/freeglut.h>
 	// #include "gofunctions.h"
 
 to
 
 	// #cgo LDFLAGS: -IC:/Users/Alice/Downloads/freeglut/include -LC:/Users/Alice/Downloads/freeglut/bin/x64 -l:freeglut.dll
 	// #include <stdlib.h>
-	// #include <GL/glut.h>
+	// #include <GL/freeglut.h>
 	// #include "gofunctions.h"
 
 Compile the binding with
 
-	$ go install github.com/vitalibaumtrok/glut
+	$ go install github.com/vitalibaumtrok/freeglut
 
 ## Example
 	package main
@@ -123,3 +123,9 @@ Compile the binding with
 			}
 		}
 	}
+
+## Education
+A little about the differences between GLUT and FreeGLUT
+<http://www.lighthouse3d.com/cg-topics/glut-and-freeglut/>.
+
+

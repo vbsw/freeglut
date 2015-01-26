@@ -97,7 +97,7 @@ Compile the binding with
 		glut.Init()
 		glut.InitDisplayMode(glut.SINGLE | glut.RGBA)
 		glut.InitWindowSize(640, 480)
-		glut.CreateWindow("Testing GLUT binding for Go");
+		glut.CreateWindow("Testing FreeGLUT binding for Go");
 		glut.ReshapeFunc(reshape)
 		glut.DisplayFunc(display)
 		glut.KeyboardFunc(keyboard)

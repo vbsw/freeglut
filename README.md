@@ -30,7 +30,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 For more information, please refer to <http://unlicense.org>
 
 ## Development
-Programming language Go is used. The binding is not tested and doesn't include the depricated joystick functions.
+Programming language Go is used. The binding is not tested and doesn't include the deprecated joystick functions.
 
 The reference for the freeglut functions is taken from <http://freeglut.sourceforge.net/docs/api.php> and <http://sourcecodebrowser.com/freeglut/2.6.0/freeglut__ext_8h.html>.
 

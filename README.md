@@ -37,30 +37,33 @@ The reference for the freeglut functions is taken from <http://freeglut.sourcefo
 ## Installation
 
 ### Linux
-Install the programming language Go as described here <https://golang.org/doc/install>. You also need Git, the C standard library development package and the Freeglut development package. Install them for example with
+Install the programming language [Go](https://golang.org/doc/install) and
+the source code management system [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
+You also need the C standard library development package and the Freeglut development package. Install them for example with
 
         $ sudo apt-get install git libc6-dev freeglut3-dev
 
-If you don't have this project already get it with
+Get this project with
 
 	$ go get github.com/vitalibaumtrok/freeglut
 
-otherwise update it with
+or update your local copy with
 
 	$ go get -u github.com/vitalibaumtrok/freeglut
 
-Compile it with
+or compile it with
 
 	$ go install github.com/vitalibaumtrok/freeglut
 
 ### Windows
-Install the programming language Go as described here <https://golang.org/doc/install>. Install Git.
+Install the programming language [Go](https://golang.org/doc/install) and
+the source code management system [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
 
-If you don't have this project already get it with (run this preferably from the Git Bash)
+Get this project with (run this preferably from the Git Bash)
 
 	$ go get github.com/vitalibaumtrok/freeglut
 
-otherwise update it with
+or update your local copy with
 
 	$ go get -u github.com/vitalibaumtrok/freeglut
 

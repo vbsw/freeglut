@@ -29,19 +29,53 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 For more information, please refer to <http://unlicense.org>
 
-## Development
-Programming language Go is used. The binding is not tested and doesn't include the deprecated joystick functions.
+## Example
 
-The reference for the freeglut functions is taken from <http://freeglut.sourceforge.net/docs/api.php> and <http://sourcecodebrowser.com/freeglut/2.6.0/freeglut__ext_8h.html>.
+	package main
+
+	import (
+		glut "github.com/vitalibaumtrok/freeglut"
+	)
+
+	func main() {
+		glut.Init()
+		glut.InitDisplayMode(glut.SINGLE | glut.RGBA)
+		glut.InitWindowSize(640, 480)
+		glut.CreateWindow("Testing FreeGLUT binding for Go");
+		glut.ReshapeFunc(reshape)
+		glut.DisplayFunc(display)
+		glut.KeyboardFunc(keyboard)
+		glut.MainLoop()
+	}
+
+	func reshape(width, height int) {
+		println("reshape")
+	}
+
+	func display() {
+		println("display")
+	}
+
+	func keyboard(key uint8, x, y int) {
+		if key==27 { // escape
+			glut.DestroyWindow(glut.GetWindow())
+		} else {
+			if (glut.GetModifiers() & glut.ACTIVE_CTRL) > 0 {
+				println("key pressed: ctrl +", key)
+			} else {
+				println("key pressed:", key)
+			}
+		}
+	}
 
 ## Installation
 
 ### Linux
 Install the programming language [Go](https://golang.org/doc/install) and
 the source code management system [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
-You also need the C standard library development package and the Freeglut development package. Install them for example with
+You also need GCC, the C standard library development package and the Freeglut development package. Install them for example with
 
-        $ sudo apt-get install git libc6-dev freeglut3-dev
+        $ sudo apt-get install git gcc libc6-dev freeglut3-dev libgl1-mesa-dev
 
 Get this project with
 
@@ -91,46 +125,11 @@ Compile the binding with
 
 	$ go install github.com/vitalibaumtrok/freeglut
 
-## Example
-	package main
+## References
 
-	import (
-		glut "github.com/vitalibaumtrok/freeglut"
-	)
-
-	func main() {
-		glut.Init()
-		glut.InitDisplayMode(glut.SINGLE | glut.RGBA)
-		glut.InitWindowSize(640, 480)
-		glut.CreateWindow("Testing FreeGLUT binding for Go");
-		glut.ReshapeFunc(reshape)
-		glut.DisplayFunc(display)
-		glut.KeyboardFunc(keyboard)
-		glut.MainLoop()
-	}
-
-	func reshape(width, height int) {
-		println("reshape")
-	}
-
-	func display() {
-		println("display")
-	}
-
-	func keyboard(key uint8, x, y int) {
-		if key==27 { // escape
-			glut.DestroyWindow(glut.GetWindow())
-		} else {
-			if (glut.GetModifiers() & glut.ACTIVE_CTRL) > 0 {
-				println("key pressed: ctrl +", key)
-			} else {
-				println("key pressed:", key)
-			}
-		}
-	}
-
-## Education
-A little about the differences between GLUT and FreeGLUT
-<http://www.lighthouse3d.com/cg-topics/glut-and-freeglut/>.
-
+- <https://www.opengl.org/resources/libraries/glut/glut-3.spec.pdf>
+- <https://www.opengl.org/resources/libraries/glut/glut_downloads.php>
+- <http://www.lighthouse3d.com/cg-topics/glut-and-freeglut/>
+- <http://freeglut.sourceforge.net/docs/api.php>
+- <http://sourcecodebrowser.com/freeglut/2.6.0/freeglut__ext_8h.html>
 

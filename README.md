@@ -1,8 +1,10 @@
 # freeglut
 
+[![GoDoc](https://godoc.org/github.com/vbsw/freeglut?status.svg)](https://godoc.org/github.com/vbsw/freeglut)
+
 ## Abstract
-This is freeglut binding for the programming language Go,
-published at <https://github.com/vbsw/freeglut>.
+This is freeglut binding (published at <https://github.com/vbsw/freeglut>)
+for the programming language Go.
 
 ## Copying
 This is free and unencumbered software released into the public domain.

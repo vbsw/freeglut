@@ -1,7 +1,8 @@
 # freeglut
 
 ## Abstract
-This is freeglut binding for the programming language Go.
+This is freeglut binding for the programming language Go,
+published at <https://github.com/vbsw/freeglut>.
 
 ## Copying
 This is free and unencumbered software released into the public domain.
@@ -34,7 +35,7 @@ For more information, please refer to <http://unlicense.org>
 	package main
 
 	import (
-		glut "github.com/vitalibaumtrok/freeglut"
+		glut "github.com/vbsw/freeglut"
 	)
 
 	func main() {
@@ -79,15 +80,15 @@ You also need GCC, the C standard library development package and the Freeglut d
 
 Get this project with
 
-	$ go get github.com/vitalibaumtrok/freeglut
+	$ go get github.com/vbsw/freeglut
 
 or update your local copy with
 
-	$ go get -u github.com/vitalibaumtrok/freeglut
+	$ go get -u github.com/vbsw/freeglut
 
 or compile it with
 
-	$ go install github.com/vitalibaumtrok/freeglut
+	$ go install github.com/vbsw/freeglut
 
 ### Windows
 Install the programming language [Go](https://golang.org/doc/install) and
@@ -95,11 +96,11 @@ the source code management system [Git](https://git-scm.com/book/en/v2/Getting-S
 
 Get this project with (run this preferably from the Git Bash)
 
-	$ go get github.com/vitalibaumtrok/freeglut
+	$ go get github.com/vbsw/freeglut
 
 or update your local copy with
 
-	$ go get -u github.com/vitalibaumtrok/freeglut
+	$ go get -u github.com/vbsw/freeglut
 
 Cgo needs another compiler to compile c files. On a 64 bit system a 64 bit compiler is needed. I tried it with the gcc. MinGW provides only 32 bit binaries. So go to <http://tdm-gcc.tdragon.net> to download 64 bit gcc binaries. Install it.
 
@@ -107,7 +108,7 @@ Then download freeglut from <http://www.transmissionzero.co.uk/software/freeglut
 
 	C:/Users/Alice/Downloads/freeglut
 
-Then open the file github.com/vitalibaumtrok/freeglut/freeglut.go and change the first line from
+Then open the file github.com/vbsw/freeglut/freeglut.go and change the first line from
 
 	// #cgo LDFLAGS: -lglut
 	// #include <stdlib.h>
@@ -123,7 +124,7 @@ to
 
 Compile the binding with
 
-	$ go install github.com/vitalibaumtrok/freeglut
+	$ go install github.com/vbsw/freeglut
 
 ## References
 
